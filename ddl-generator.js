@@ -111,14 +111,35 @@ class DDLGenerator {
   getColumnString (elem, options) {
     var self = this
     var line = self.getId(elem.name, options)
+    var id = line
+
     var _type = elem.getTypeString()
+    var _length = elem.length
+    console.log(elem);
+    
     if (_type.trim().length === 0) {
       _type = 'INTEGER'
     }
+
+    if(_type.toUpperCase() === 'VARCHAR'){
+      if(_length === 0){
+        _length = 100
+      }
+      _type = _type+'('+_length+')'
+    }
+
     line += ' ' + _type
+    // console.log(id);
+    
+    if(elem.primaryKey && id === '`id`' && _type === 'INTEGER') {
+      line += ' AUTO_INCREMENT'
+    }
     if (elem.primaryKey || !elem.nullable) {
       line += ' NOT NULL'
     }
+
+    line += " COMMENT '"+elem.documentation+"'"
+
     return line
   }
 
