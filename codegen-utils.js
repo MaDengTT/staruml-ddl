@@ -73,6 +73,13 @@ class CodeWriter {
     return this.lines.join('\n')
   }
 
+  /**
+   * clear string data
+   */
+  clear(){
+    this.lines = []
+  }
+
 }
 
 exports.CodeWriter = CodeWriter

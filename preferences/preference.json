@@ -49,6 +49,16 @@
       "description": "Number of spaces for indentation.",
       "type": "number",
       "default": 4
+    },
+    "ddl.gents": {
+      "text": "TypeScript Generation",
+      "type": "section"
+    },
+    "ddl.gents.timestamps":{
+      "text": "timestamps",
+      "description": "Whether to add createAt updateAt deleateAt",
+      "type": "check",
+      "default": false
     }
   }
 }

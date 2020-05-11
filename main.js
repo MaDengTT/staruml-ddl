@@ -22,7 +22,7 @@
  */
 
 const ddlGenerator = require('./ddl-generator')
-
+const ddlGeneratorTs = require('./ddl-generator-ts')
 function getGenOptions () {
   return {
     fileExtension: app.preferences.get('ddl.gen.fileExtension'),
@@ -74,7 +74,43 @@ function _handleGenerate (base, path, options) {
     }
   }
 }
-
+function _handleGenerateTs (base, path, options) {
+  // var filters = [
+  //   { name: "TS Files", extensions: [ "ts" ] }
+  // ]
+  // If options is not passed, get from preference
+  options = options || getGenOptions()
+  // If base is not assigned, popup ElementPicker
+  if (!base) {
+    app.elementPickerDialog.showDialog('Select a data model to generate DDL', null, type.ERDDataModel).then(function ({buttonId, returnValue}) {
+      if (buttonId === 'ok') {
+        base = returnValue
+        // If path is not assigned, popup Save Dialog to save a file
+        
+        if (!path) {
+          var file = app.dialogs.showOpenDialog('Save DDL As...', null, null,{ properties: ['openDirectory'] })
+          if (file && file.length > 0) {
+            path = file
+            ddlGeneratorTs.generate(base, path, options)
+          }
+        } else {
+          ddlGeneratorTs.generate(base, path, options)
+        }
+      }
+    })
+  } else {
+    // If path is not assigned, popup Save Dialog to save a file
+    if (!path) {
+      var file = app.dialogs.showOpenDialog('Save DDL As...', null, null,{ properties: ['openDirectory'] })
+      if (file && file.length > 0) {
+        path = file
+        ddlGeneratorTs.generate(base, path, options)
+      }
+    } else {
+      ddlGeneratorTs.generate(base, path, options)
+    }
+  }
+}
 /**
 * Popup PreferenceDialog with DDL Preference Schema
 */
@@ -84,6 +120,7 @@ function _handleConfigure () {
 
 function init () {
   app.commands.register('ddl:generate', _handleGenerate)
+  app.commands.register('ddl:generate_ts', _handleGenerateTs)
   app.commands.register('ddl:configure', _handleConfigure)
 }
 
