@@ -181,7 +181,7 @@ class DDLGenerator {
 
     dataType = 'DataType.'+dataType
 
-    lines.push("@Column("+dataType+")");
+    
     if (elem.primaryKey) {
       lines.push("@PrimaryKey");
     }
@@ -196,7 +196,7 @@ class DDLGenerator {
     }
 
     lines.push("@Comment('" + elem.documentation + "')");
-
+    lines.push("@Column("+dataType+")");
     line += "?: " + self.ddlTypeToTsType(_type, options);
     // console.log(id);
     lines.push(line)
@@ -304,12 +304,12 @@ class DDLGenerator {
     var types = ["Table", "Column", "Model", "HasMany", "sequelize-typescript"];
     var includeTypes = [];
 
-    codeWriter.writeLine("import {Table, DataType, Column, Model, AllowNull, AutoIncrement, Unique, PrimaryKey, Comment } from 'sequelize-typescript';")
+    codeWriter.writeLine("import {Table, DataType, Column, Model, AllowNull, AutoIncrement, Unique, PrimaryKey, Comment } from 'sequelize-typescript'")
     codeWriter.writeLine("")
     // Table
     codeWriter.writeLine("@Table({ tableName: '"+elem.name+"'})");
     codeWriter.writeLine(
-      "class " + _name + " extends Model<" + _name + "> {"
+      "export default class " + _name + " extends Model<" + _name + "> {"
     );
     codeWriter.writeLine("");
     codeWriter.indent();
@@ -332,6 +332,7 @@ class DDLGenerator {
     codeWriter.outdent()
     codeWriter.writeLine("");
     codeWriter.writeLine("}")
+    codeWriter.writeLine("")
   }
 
   /**
